@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Peta Kendaraan Real-time</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/leaflet.css') }}">
+    <script src="{{ url_for('static', filename='js/leaflet.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/leaflet.geometryutil.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div id="map"></div>
+    <div id="hazard-notification" class="hazard-notification" style="display: none;">
+        <span class="hazard-icon">&#9888;</span> <span class="hazard-text">WARNING: Potential hazard detected!</span>
+    </div>
+    <script src="{{ url_for('static', filename='js/map.js') }}"></script>
+</body>
+</html>
