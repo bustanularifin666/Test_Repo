@@ -73,7 +73,7 @@ void storeData(uint8_t* buf,size_t lena, uint8_t from) {
         std::cout << point << std::endl;
     }
     // Ensure we have exactly 5 data points
-    if (dataPoints.size() != 6) {
+    if (dataPoints.size() != 2) {
         std::cerr << "Error: Unexpected number of data points" << std::endl;
         return;
     }
@@ -81,10 +81,10 @@ void storeData(uint8_t* buf,size_t lena, uint8_t from) {
     // Extract individual data points
     std::string date = dataPoints[0];
     std::string time = dataPoints[1];
-    std::string latitude = dataPoints[2];
-    std::string longitude = dataPoints[3];
-    std::string speed = dataPoints[4];
-    std::string id_node = dataPoints[5];
+    //std::string latitude = dataPoints[2];
+    //std::string longitude = dataPoints[3];
+    //std::string speed = dataPoints[4];
+    //std::string id_node = dataPoints[5];
 
     // Connect to MySQL database
     MYSQL *conn = mysql_init(NULL);
@@ -101,10 +101,10 @@ void storeData(uint8_t* buf,size_t lena, uint8_t from) {
 
     // Prepare SQL query
     char query[500]; // Adjust size as needed
-    //snprintf(query, sizeof(query), "INSERT INTO lora_test (number, node) VALUES ('%s', '%s')",
-    snprintf(query, sizeof(query), "INSERT INTO gps_data (date, time, node, latitude, longitude, speed) VALUES ('%s', '%s', '%s', '%s', '%s', '%s')",
-            //date.c_str(), time.c_str());
-            date.c_str(), time.c_str(), id_node.c_str(), latitude.c_str(), longitude.c_str(), speed.c_str());
+    snprintf(query, sizeof(query), "INSERT INTO lora_test (number, node) VALUES ('%s', '%s')",
+    //snprintf(query, sizeof(query), "INSERT INTO gps_data (date, time, node, latitude, longitude, speed) VALUES ('%s', '%s', '%s', '%s', '%s', '%s')",
+            date.c_str(), time.c_str());
+            //date.c_str(), time.c_str(), id_node.c_str(), latitude.c_str(), longitude.c_str(), speed.c_str());
 
     // Execute SQL query
     if (mysql_query(conn, query)) {
@@ -127,6 +127,7 @@ int main (int argc, const char* argv[] )
   static unsigned long last_millis;
   long lastSendTime = 0;
   int interval = 500;
+  int count = 1;
   srand(time(NULL));
 
   unsigned long led_blink = 0;
@@ -222,19 +223,15 @@ int main (int argc, const char* argv[] )
       // Send a message to rf95_server
       if (millis() - lastSendTime > interval) {
         // Buka file gps.txt untuk mengambil data gps yang akan dikirim
-        ifstream myfile("/home/pi/gps.txt");
-        while (getline (myfile,line)){
-         new1=line;
-        }
-        new1 += ",1";
-        myfile.close();
-        
-        // ifstream myfile("/home/pi/test.txt");
+        // ifstream myfile("/home/pi/gps.txt");
         // while (getline (myfile,line)){
         //  new1=line;
         // }
         // new1 += ",1";
         // myfile.close();
+        
+        new1 = to_string(count);
+	new1 += ",1";
 
         const uint8_t *data = reinterpret_cast<const uint8_t*>(new1.c_str());
         uint8_t len = new1.length();
@@ -248,7 +245,17 @@ int main (int argc, const char* argv[] )
         rf95.waitPacketSent();
         
         lastSendTime = millis();
-        interval = 500 + rand() % 500;
+	count = count + 1;
+        //interval = 500;
+        //interval = 500 + (((rand() % 2 == 0) ? 1 : -1) * rand() % 10);
+        //interval = 500 + (((rand() % 2 == 0) ? 1 : -1) * rand() % 25);
+        //interval = 500 + (((rand() % 2 == 0) ? 1 : -1) * rand() % 50);
+        //interval = 500 + (((rand() % 2 == 0) ? 1 : -1) * rand() % 75);
+        interval = 500 + (((rand() % 2 == 0) ? 1 : -1) * rand() % 100);
+        //interval = 500 + (((rand() % 2 == 0) ? 1 : -1) * rand() % 250);
+        //interval = 500 + (((rand() % 2 == 0) ? 1 : -1) * rand() % 500);
+
+
       }
 
       // Now wait for a reply
