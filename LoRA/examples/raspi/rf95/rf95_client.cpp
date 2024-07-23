@@ -242,16 +242,16 @@ int main (int argc, const char* argv[] )
       
       // Send a message to rf95_server
       if (millis() - lastSendTime > interval) {
-        // Buka file gps.txt untuk mengambil data gps yang akan dikirim
-        // ifstream myfile("/home/pi/gps.txt");
-        // while (getline (myfile,line)){
-        //  new1=line;
-        // }
-        // new1 += ",1";
-        // myfile.close();
+         Buka file gps.txt untuk mengambil data gps yang akan dikirim
+         ifstream myfile("/home/pi/gps.txt");
+         while (getline (myfile,line)){
+          new1=line;
+         }
+         new1 += ",1";
+         myfile.close();
         
-        new1 = to_string(count);
-	new1 += ",1";
+        //new1 = to_string(count);
+	//new1 += ",1";
 
         const uint8_t *data = reinterpret_cast<const uint8_t*>(new1.c_str());
         uint8_t len = new1.length();
