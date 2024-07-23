@@ -103,7 +103,6 @@ void storeData(uint8_t* buf,size_t lena, uint8_t from) {
 	if (!is_valid_input(date) || !is_valid_input(time) || !is_valid_input(latitude) || !is_valid_input(longitude) || !is_valid_input(speed) || !is_valid_input(id_node)) {
 		std::cerr << "Invalid data detected. Record will not be saved." << std::endl;
 		data_valid = false;
-	        return;
 	}
 	if (data_valid){
 	    // Connect to MySQL database
