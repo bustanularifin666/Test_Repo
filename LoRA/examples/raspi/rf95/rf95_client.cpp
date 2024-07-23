@@ -53,6 +53,16 @@ void sig_handler(int sig)
   force_exit=true;
 }
 
+bool is_valid_input(const string& input) {
+    for (char c : input) {
+        // Allow only digits, '.', ':', and '-'
+        if (!isdigit(c) && c != '.' && c != ':' && c != '-') {
+            return false;
+        }
+    }
+    return true;
+}
+
 void storeData(uint8_t* buf,size_t lena, uint8_t from) {
 
     std::vector<uint8_t> buffer(buf, buf + lena);
@@ -73,7 +83,7 @@ void storeData(uint8_t* buf,size_t lena, uint8_t from) {
         std::cout << point << std::endl;
     }
     // Ensure we have exactly 5 data points
-    if (dataPoints.size() != 2) {
+    if (dataPoints.size() != 6) {
         std::cerr << "Error: Unexpected number of data points" << std::endl;
         return;
     }
@@ -81,42 +91,52 @@ void storeData(uint8_t* buf,size_t lena, uint8_t from) {
     // Extract individual data points
     std::string date = dataPoints[0];
     std::string time = dataPoints[1];
-    //std::string latitude = dataPoints[2];
-    //std::string longitude = dataPoints[3];
-    //std::string speed = dataPoints[4];
-    //std::string id_node = dataPoints[5];
+    std::string latitude = dataPoints[2];
+    std::string longitude = dataPoints[3];
+    std::string speed = dataPoints[4];
+    std::string id_node = dataPoints[5];
 
-    // Connect to MySQL database
-    MYSQL *conn = mysql_init(NULL);
-    if (conn == NULL) {
-        std::cerr << "Error initializing MySQL connection" << std::endl;
-        return;
-    }
+    bool data_valid = true;
 
-    if (!mysql_real_connect(conn, "localhost", "root", "raspbian", "capstone", 0, NULL, 0)) {
-        std::cerr << "Error connecting to MySQL: " << mysql_error(conn) << std::endl;
-        mysql_close(conn);
-        return;
-    }
-
-    // Prepare SQL query
-    char query[500]; // Adjust size as needed
-    snprintf(query, sizeof(query), "INSERT INTO lora_test (number, node) VALUES ('%s', '%s')",
-    //snprintf(query, sizeof(query), "INSERT INTO gps_data (date, time, node, latitude, longitude, speed) VALUES ('%s', '%s', '%s', '%s', '%s', '%s')",
-            date.c_str(), time.c_str());
-            //date.c_str(), time.c_str(), id_node.c_str(), latitude.c_str(), longitude.c_str(), speed.c_str());
-
-    // Execute SQL query
-    if (mysql_query(conn, query)) {
-        std::cerr << "Error executing SQL query: " << mysql_error(conn) << std::endl;
-        mysql_close(conn);
-        return;
-    }
-
-    printf("gps data from %s data stored successfully",  id_node);
-
-    // Close MySQL connection
-    mysql_close(conn);
+     // Validate data
+	if (!is_valid_input(date) || !is_valid_input(time) || !is_valid_input(latitude) || !is_valid_input(longitude) || !is_valid_input(speed) || !is_valid_input(id_node)) {
+		std::cerr << "Invalid data detected. Record will not be saved." << std::endl;
+		data_valid = false;
+	        return;
+	}
+	if (data_valid){
+	    // Connect to MySQL database
+	    MYSQL *conn = mysql_init(NULL);
+	    if (conn == NULL) {
+	        std::cerr << "Error initializing MySQL connection" << std::endl;
+	        return;
+	    }
+	
+	    if (!mysql_real_connect(conn, "localhost", "root", "raspbian", "capstone", 0, NULL, 0)) {
+	        std::cerr << "Error connecting to MySQL: " << mysql_error(conn) << std::endl;
+	        mysql_close(conn);
+	        return;
+	    }
+	
+	    // Prepare SQL query
+	    char query[500]; // Adjust size as needed
+	    //snprintf(query, sizeof(query), "INSERT INTO lora_test (number, node) VALUES ('%s', '%s')",
+	    snprintf(query, sizeof(query), "INSERT INTO gps_data (date, time, node, latitude, longitude, speed) VALUES ('%s', '%s', '%s', '%s', '%s', '%s')",
+	            //date.c_str(), time.c_str());
+	            date.c_str(), time.c_str(), id_node.c_str(), latitude.c_str(), longitude.c_str(), speed.c_str());
+	
+	    // Execute SQL query
+	    if (mysql_query(conn, query)) {
+	        std::cerr << "Error executing SQL query: " << mysql_error(conn) << std::endl;
+	        mysql_close(conn);
+	        return;
+	    }
+	
+	    printf("gps data from %s data stored successfully",  id_node);
+	
+	    // Close MySQL connection
+	    mysql_close(conn);
+	}
 }
 
 //Main Function
