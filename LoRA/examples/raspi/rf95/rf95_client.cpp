@@ -29,6 +29,7 @@
 #include <mysql/mysql.h>
 #include <vector>
 #include <sstream>
+#include <cctype>
 using namespace std;
 
 #define BOARD_LORASPI
