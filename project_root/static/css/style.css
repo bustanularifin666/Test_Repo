@@ -17,7 +17,7 @@
 .hazard-notification {
   background-color: yellow;
   color: black;
-  padding: 20px; 
+  padding: 50px; 
   border-radius: 5px;
   font-weight: bold;
   position: absolute;
@@ -29,10 +29,10 @@
 }
 
 .hazard-icon {
-  font-size: 30px; 
+  font-size: 50px; 
   margin-right: 10px; 
 }
 
 .hazard-text {
-  font-size: 18px; 
+  font-size: 50px; 
 }
