@@ -271,8 +271,8 @@ int main (int argc, const char* argv[] )
         //interval = 500 + (((rand() % 2 == 0) ? 1 : -1) * rand() % 25);
         //interval = 500 + (((rand() % 2 == 0) ? 1 : -1) * rand() % 50);
         //interval = 500 + (((rand() % 2 == 0) ? 1 : -1) * rand() % 75);
-        interval = 500 + (((rand() % 2 == 0) ? 1 : -1) * rand() % 100);
-        //interval = 500 + (((rand() % 2 == 0) ? 1 : -1) * rand() % 250);
+        //interval = 500 + (((rand() % 2 == 0) ? 1 : -1) * rand() % 100);
+        interval = 500 + (((rand() % 2 == 0) ? 1 : -1) * rand() % 250);
         //interval = 500 + (((rand() % 2 == 0) ? 1 : -1) * rand() % 500);
 
 
