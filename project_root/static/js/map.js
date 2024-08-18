@@ -104,12 +104,13 @@ setInterval(() => {
                 map.setView([data.user.latitude, data.user.longitude], 16);
 
                 // Periksa potensi bahaya setelah update marker
-                if (checkPotentialHazard([data.user.latitude, data.user.longitude], data.others)) {
-                    document.querySelector('.hazard-text').textContent = "WARNING: Potential hazard detected!";
-                    document.getElementById('hazard-notification').style.display = 'block';
-                } else {
-                    document.getElementById('hazard-notification').style.display = 'none';
-                }
+                //if (checkPotentialHazard([data.user.latitude, data.user.longitude], data.others)) {
+                //    document.querySelector('.hazard-text').textContent = "WARNING: Potential hazard detected!";
+                //    document.getElementById('hazard-notification').style.display = 'block';
+                //} else {
+                //    document.getElementById('hazard-notification').style.display = 'none';
+                //}
+                document.getElementById('hazard-notification').style.display = 'none';
             } else {
                 console.error("Invalid data received from server:", data);
             }
