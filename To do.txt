@@ -20,18 +20,15 @@
 		make
 		sudo make check
 		sudo make install
-	git clone https://github.com/Elecrow-RD/Lora-RF95-IOT-Board-v1.0.git
-	edit make file "LIBS          = -lbcm2835 -lmysqlclient" && "	RADIOHEADBASE = ../../..
+	cd ../examples/raspi/rf95/
+	edit makefile "LIBS          = -lbcm2835 -lmysqlclient" && "	RADIOHEADBASE = ../../..
 									MYSQL_INCLUDE = -I/usr/include/MySQL"
-	
-
 	
 5. Folium
 	sudo apt-get install python3-dev python3-pip python3-rpi.gpio git
 	pip3 install RPi.GPIO spidev pymysql pynmea2 folium==0.13.0 geopy
 	sudo apt install libopenblas-dev
 	sudo apt-get install libatlas-base-dev
-
 
 6. Database
 	sudo apt-get install -y -t stretch apache2
@@ -45,7 +42,7 @@
 	
 	sudo mysql_secure_installation
 	sudo MySQL -u root -p
-	GRANT ALL PRIVILEGES on *.* to 'root'@'localhost' IDENTIFIED BY 'test';
+	GRANT ALL PRIVILEGES on *.* to 'root'@'localhost' IDENTIFIED BY 'capstone';
 	FLUSH PRIVILEGES;
 	/q
 	service mysql stop
@@ -55,9 +52,8 @@
 	CREATE DATABASE capstone;
 	USE capstone;
 	CREATE TABLE selfgps ( date VARCHAR(100), time VARCHAR(100), latitude VARCHAR(100), longitude VARCHAR(100), speed VARCHAR(100));
-
 	CREATE TABLE gps_data ( date VARCHAR(100), time VARCHAR(100), node VARCHAR(100), latitude VARCHAR(100), longitude VARCHAR(100), speed VARCHAR(100));
-	
+	CREATE TABLE lora_test ( number VARCHAR(100), node VARCHAR(100));
 
 7. GPS
 	sudo nano /boot/config.txt
@@ -69,11 +65,16 @@
 
 8. AutoStart
 	cd .config/lxsession/LXDE-pi
-	sudo nano AutoStart
-	@python /home/pi/perancangan-realtime/gps/gpsdata.py
-	@python3 /home/pi/perancangan-realtime/project_root/app.py
-	@lxterminal -e /usr/bin/sudo /home/pi/perancangan-realtime/LoRA/lora_code/example/raspi/rf95/rf95_client
-	@chromium-browser --start-fullscreen http://127.0.0.1:5000/
+	nano AutoStart
+		lxpanel --profile LXDE-pi
+		@pcmanfm --desktop --profile LXDE-pi
+		@xscreensaver -no-splash
+		@point-rpi
+		@lxterminal -e python /home/pi/perancangan-realtime/gps/gpsdata.py
+		@lxterminal -e python3 /home/pi/perancangan-realtime/project_root/app.py
+		@lxterminal -e /usr/bin/sudo /home/pi/perancangan-realtime/LoRA/examples/raspi/rf95/rf95_client
+		@chromium-browser --start-fullscreen http://127.0.0.1:5000/
+
 
 9. Fuzzy
 	sudo pip3 install --no-cache-dir scikit-fuzzy==0.4.0
@@ -81,6 +82,7 @@
 	pip3 install --no-cache-dir scipy==1.1.0
 	pip3 install --no-cache-dir cairocffi==1.16.0
 
-
 https://learn.sparkfun.com/tutorials/how-to-run-a-raspberry-pi-program-on-startup/method-3-systemd
 https://forums.raspberrypi.com/viewtopic.php?t=294014
+
+	
